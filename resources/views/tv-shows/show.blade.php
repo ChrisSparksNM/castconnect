@@ -27,6 +27,9 @@
                     <a href="{{ route('tv-shows.index') }}" class="text-gray-600 hover:text-gray-900 font-medium">
                         Browse Shows
                     </a>
+                    <a href="{{ route('leaderboard.index') }}" class="text-gray-600 hover:text-gray-900 font-medium">
+                        🏆 Leaderboard
+                    </a>
                     @auth
                         <a href="{{ route('dashboard') }}" class="text-gray-600 hover:text-gray-900 font-medium">
                             Dashboard
@@ -235,5 +238,8 @@
             </div>
         </div>
     </footer>
+
+    <!-- Points Display -->
+    @include('components.points-display')
 </body>
 </html>

@@ -23,5 +23,8 @@
                 {{ $slot }}
             </main>
         </div>
+
+        <!-- Points Display -->
+        @include('components.points-display')
     </body>
 </html>

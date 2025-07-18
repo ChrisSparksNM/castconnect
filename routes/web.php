@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActorSubmissionController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TvShowController;
+use App\Http\Controllers\LeaderboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -13,6 +14,9 @@ Route::get('/', function () {
 // TV Shows - Public routes
 Route::get('/tv-shows', [TvShowController::class, 'index'])->name('tv-shows.index');
 Route::get('/tv-shows/{tvShow}', [TvShowController::class, 'show'])->name('tv-shows.show');
+
+// Leaderboard - Public route
+Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'points',
     ];
 
     /**
@@ -44,6 +45,23 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
+    }
+
+    /**
+     * Add points to the user
+     */
+    public function addPoints(int $points): void
+    {
+        $this->increment('points', $points);
+    }
+
+    /**
+     * Get user's submissions
+     */
+    public function submissions()
+    {
+        return $this->hasMany(ActorSubmission::class);
     }
 }

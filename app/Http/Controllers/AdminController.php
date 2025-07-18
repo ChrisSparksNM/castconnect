@@ -38,6 +38,18 @@ class AdminController extends Controller
             'x_handle' => $submission->x_handle,
         ]);
 
+        // Calculate points for the user
+        $points = 10; // Base points for approval
+        if ($submission->instagram_handle) {
+            $points += 10; // Instagram bonus
+        }
+        if ($submission->x_handle) {
+            $points += 10; // X/Twitter bonus
+        }
+
+        // Award points to the user
+        $submission->user->addPoints($points);
+
         // Update submission status
         $submission->update([
             'status' => 'approved',
@@ -45,7 +57,7 @@ class AdminController extends Controller
             'reviewed_by' => auth()->id(),
         ]);
 
-        return redirect()->back()->with('success', 'Submission approved and actor added!');
+        return redirect()->back()->with('success', "Submission approved! User awarded {$points} points.");
     }
 
     public function rejectSubmission(Request $request, ActorSubmission $submission)
