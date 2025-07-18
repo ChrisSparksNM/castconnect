@@ -191,6 +191,91 @@
                 </div>
             @endif
 
+            <!-- Social Media Feed Preview -->
+            @if($recentPosts->count() > 0)
+                <div class="mt-12 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-2xl font-bold text-gray-900">Latest from the Cast</h2>
+                            <a href="{{ route('tv-shows.feed', $tvShow) }}" 
+                               class="text-blue-600 hover:text-blue-800 font-medium flex items-center space-x-1">
+                                <span>View Full Feed</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @foreach($recentPosts->take(6) as $post)
+                                <div class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors">
+                                    <!-- Post Header -->
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                                {{ substr($post->actor->name, 0, 1) }}
+                                            </div>
+                                            <div>
+                                                <div class="font-medium text-gray-900 text-sm">{{ $post->actor->name }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center space-x-1 text-xs
+                                            {{ $post->platform === 'instagram' ? 'text-pink-600' : 'text-gray-600' }}">
+                                            <span>{{ $post->platform_icon }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Post Content -->
+                                    @if($post->image_url)
+                                        <div class="mb-3">
+                                            <img src="{{ $post->image_url }}" 
+                                                 alt="Post image" 
+                                                 class="w-full h-32 object-cover rounded-md">
+                                        </div>
+                                    @endif
+                                    
+                                    @if($post->content)
+                                        <p class="text-gray-700 text-sm mb-3 line-clamp-3">{{ $post->content }}</p>
+                                    @endif
+                                    
+                                    <!-- Post Stats -->
+                                    <div class="flex items-center justify-between text-xs text-gray-500">
+                                        <div class="flex items-center space-x-3">
+                                            <span>❤️ {{ number_format($post->likes_count) }}</span>
+                                            <span>💬 {{ number_format($post->comments_count) }}</span>
+                                        </div>
+                                        <span>{{ $post->time_ago }}</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        
+                        @if($recentPosts->count() > 6)
+                            <div class="text-center mt-6">
+                                <a href="{{ route('tv-shows.feed', $tvShow) }}" 
+                                   class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors">
+                                    View All {{ $recentPosts->count() }} Posts
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @elseif($tvShow->actors->count() > 0)
+                <!-- No Posts Yet -->
+                <div class="mt-12 bg-white rounded-xl shadow-lg border border-gray-100 p-8 text-center">
+                    <div class="text-4xl mb-4">📱</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Social Feed Coming Soon</h3>
+                    <p class="text-gray-600 mb-4">
+                        We're working on fetching the latest posts from {{ $tvShow->name }} cast members.
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        Posts from Instagram and X accounts will appear here automatically.
+                    </p>
+                </div>
+            @endif
+
             <!-- Call to Action -->
             <div class="mt-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 text-center">
                 <h3 class="text-2xl font-bold text-white mb-4">Know More Actors from {{ $tvShow->name }}?</h3>

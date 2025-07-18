@@ -14,6 +14,7 @@ Route::get('/', function () {
 // TV Shows - Public routes
 Route::get('/tv-shows', [TvShowController::class, 'index'])->name('tv-shows.index');
 Route::get('/tv-shows/{tvShow}', [TvShowController::class, 'show'])->name('tv-shows.show');
+Route::get('/tv-shows/{tvShow}/feed', [TvShowController::class, 'feed'])->name('tv-shows.feed');
 
 // Leaderboard - Public route
 Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
