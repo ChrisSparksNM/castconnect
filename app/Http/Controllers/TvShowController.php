@@ -17,18 +17,20 @@ class TvShowController extends Controller
     public function show(TvShow $tvShow)
     {
         $tvShow->load(['actors.socialMediaPosts' => function($query) {
-            $query->orderBy('posted_at', 'desc')->limit(3);
+            $query->where('posted_at', '>=', now()->subYears(5))
+                  ->orderBy('posted_at', 'desc')->limit(3);
         }]);
         
-        // Get recent social media feed for this show
-        $recentPosts = $tvShow->recentFeed(20)->get();
+        // Get social media feed for this show (expanded time range for historical data)
+        $recentPosts = $tvShow->recentFeed(20, 1825)->get(); // 5 years = ~1825 days
         
         return view('tv-shows.show', compact('tvShow', 'recentPosts'));
     }
 
     public function feed(TvShow $tvShow)
     {
-        $recentPosts = $tvShow->recentFeed(50)->get();
+        // Expanded time range to show historical posts (5 years)
+        $recentPosts = $tvShow->recentFeed(50, 1825)->get(); // 5 years = ~1825 days
         
         return view('tv-shows.feed', compact('tvShow', 'recentPosts'));
     }
