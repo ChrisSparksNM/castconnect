@@ -65,11 +65,11 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <h1 class="text-2xl font-bold text-white mb-2">🐦 TV Actor Twitter Feed</h1>
-                            <p class="text-blue-100">Latest tweets from your favorite TV show actors</p>
+                            <p class="text-blue-100">Tweets from your favorite TV show actors</p>
                         </div>
                         <div class="text-right">
                             <div class="text-3xl mb-2">𝕏</div>
-                            <div class="text-blue-100 text-sm">{{ $recentPosts->count() }} recent tweets</div>
+                            <div class="text-blue-100 text-sm">{{ $recentPosts->count() }} tweets</div>
                         </div>
                     </div>
                 </div>
@@ -178,7 +178,7 @@
                     <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Want to see more?</h3>
                         <p class="text-gray-600 mb-4">
-                            This feed shows the latest {{ $recentPosts->count() }} tweets from TV show actors in the last 30 days.
+                            This feed shows {{ $recentPosts->count() }} tweets from TV show actors across all shows.
                         </p>
                         <div class="flex flex-col sm:flex-row gap-4 justify-center">
                             <a href="{{ route('tv-shows.index') }}" 

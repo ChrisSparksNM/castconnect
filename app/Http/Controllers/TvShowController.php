@@ -35,10 +35,11 @@ class TvShowController extends Controller
 
     public function globalFeed()
     {
-        // Get recent posts from all shows, mixed together
+        // Get Twitter posts from all shows, mixed together
+        // Expanded time range to show historical posts since scraped data may be older
         $recentPosts = \App\Models\SocialMediaPost::with(['actor.tvShow'])
             ->where('platform', 'x') // Only Twitter/X posts
-            ->where('posted_at', '>=', now()->subDays(30)) // Last 30 days
+            ->where('posted_at', '>=', now()->subYears(5)) // Last 5 years to include historical posts
             ->orderBy('posted_at', 'desc')
             ->limit(100)
             ->get();
