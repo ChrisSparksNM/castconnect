@@ -32,4 +32,17 @@ class TvShowController extends Controller
         
         return view('tv-shows.feed', compact('tvShow', 'recentPosts'));
     }
+
+    public function globalFeed()
+    {
+        // Get recent posts from all shows, mixed together
+        $recentPosts = \App\Models\SocialMediaPost::with(['actor.tvShow'])
+            ->where('platform', 'x') // Only Twitter/X posts
+            ->where('posted_at', '>=', now()->subDays(30)) // Last 30 days
+            ->orderBy('posted_at', 'desc')
+            ->limit(100)
+            ->get();
+
+        return view('tv-shows.global-feed', compact('recentPosts'));
+    }
 }

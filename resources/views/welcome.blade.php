@@ -28,6 +28,9 @@
                     <a href="{{ route('tv-shows.index') }}" class="text-gray-600 hover:text-gray-900 font-medium">
                         Browse Shows
                     </a>
+                    <a href="{{ route('tv-shows.global-feed') }}" class="text-gray-600 hover:text-gray-900 font-medium">
+                        🐦 Twitter Feed
+                    </a>
                     <a href="{{ route('leaderboard.index') }}" class="text-gray-600 hover:text-gray-900 font-medium">
                         🏆 Leaderboard
                     </a>

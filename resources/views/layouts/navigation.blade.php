@@ -12,8 +12,11 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-4 sm:ml-10 sm:flex">
-                    <a href="{{ route('tv-shows.index') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('tv-shows.*') ? 'text-blue-600 bg-blue-50' : '' }}">
+                    <a href="{{ route('tv-shows.index') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('tv-shows.index') || request()->routeIs('tv-shows.show') ? 'text-blue-600 bg-blue-50' : '' }}">
                         Browse Shows
+                    </a>
+                    <a href="{{ route('tv-shows.global-feed') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('tv-shows.global-feed') ? 'text-blue-600 bg-blue-50' : '' }}">
+                        🐦 Twitter Feed
                     </a>
                     <a href="{{ route('leaderboard.index') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors {{ request()->routeIs('leaderboard.*') ? 'text-blue-600 bg-blue-50' : '' }}">
                         🏆 Leaderboard
@@ -76,8 +79,11 @@
     <!-- Mobile Navigation Menu -->
     <div x-show="open" x-transition class="sm:hidden bg-white border-t border-gray-200">
         <div class="px-2 pt-2 pb-3 space-y-1">
-            <a href="{{ route('tv-shows.index') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors {{ request()->routeIs('tv-shows.*') ? 'text-blue-600 bg-blue-50' : '' }}">
+            <a href="{{ route('tv-shows.index') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors {{ request()->routeIs('tv-shows.index') || request()->routeIs('tv-shows.show') ? 'text-blue-600 bg-blue-50' : '' }}">
                 Browse Shows
+            </a>
+            <a href="{{ route('tv-shows.global-feed') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors {{ request()->routeIs('tv-shows.global-feed') ? 'text-blue-600 bg-blue-50' : '' }}">
+                🐦 Twitter Feed
             </a>
             <a href="{{ route('leaderboard.index') }}" class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors {{ request()->routeIs('leaderboard.*') ? 'text-blue-600 bg-blue-50' : '' }}">
                 🏆 Leaderboard
