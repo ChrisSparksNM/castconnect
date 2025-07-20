@@ -16,29 +16,7 @@
     </head>
     <body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen font-['Inter']">
         <!-- Navigation -->
-        <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-16">
-                    <div class="flex items-center">
-                        <a href="/" class="flex-shrink-0">
-                            <h1 class="text-xl font-bold text-gray-900">📺 TV & Actors</h1>
-                        </a>
-                    </div>
-                    
-                    <div class="flex items-center space-x-4">
-                        <a href="{{ route('tv-shows.index') }}" class="text-gray-600 hover:text-gray-900 font-medium">
-                            Browse Shows
-                        </a>
-                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900 font-medium">
-                            Log in
-                        </a>
-                        <a href="{{ route('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                            Sign up
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        @include('components.global-navigation')
 
         <!-- Main Content -->
         <div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
