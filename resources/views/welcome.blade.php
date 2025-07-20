@@ -14,51 +14,7 @@
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen font-['Inter']">
     <!-- Navigation -->
-    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <h1 class="text-xl font-bold text-gray-900">📺 TV & Actors</h1>
-                    </div>
-                </div>
-                
-                @if (Route::has('login'))
-                    <div class="flex items-center space-x-4">
-                    <a href="{{ route('tv-shows.index') }}" class="text-gray-600 hover:text-gray-900 font-medium">
-                        Browse Shows
-                    </a>
-                    <a href="{{ route('tv-shows.global-feed') }}" class="text-gray-600 hover:text-gray-900 font-medium">
-                        🐦 Twitter Feed
-                    </a>
-                    <a href="{{ route('leaderboard.index') }}" class="text-gray-600 hover:text-gray-900 font-medium">
-                        🏆 Leaderboard
-                    </a>
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="text-gray-600 hover:text-gray-900 font-medium">
-                            Dashboard
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                                Logout
-                            </button>
-                        </form>
-                    @else
-                            <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900 font-medium">
-                                Log in
-                            </a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                                    Sign up
-                                </a>
-                            @endif
-                        @endauth
-                    </div>
-                @endif
-            </div>
-        </div>
-    </nav>
+    @include('components.global-navigation')
 
     <!-- Hero Section -->
     <div class="relative overflow-hidden">
