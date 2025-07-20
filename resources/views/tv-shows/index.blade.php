@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>TV Shows & Actors Directory</title>
     
     <!-- Fonts -->
@@ -36,7 +37,7 @@
                     @foreach($tvShows as $show)
                         <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300">
                             <!-- Show Header -->
-                            <div class="relative h-48 overflow-hidden">
+                            <div class="relative h-48 overflow-hidden group">
                                 @if($show->image_url)
                                     <!-- Show Image Background -->
                                     <img src="{{ $show->image_url }}" 
@@ -48,6 +49,22 @@
                                     <!-- Fallback Gradient -->
                                     <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600"></div>
                                 @endif
+
+                                <!-- Admin Photo Upload Button -->
+                                @auth
+                                    @if(auth()->user()->is_admin)
+                                        <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button onclick="openShowPhotoModal({{ $show->id }}, '{{ $show->name }}')" 
+                                                    class="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors"
+                                                    title="Upload show photo">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    @endif
+                                @endauth
                                 
                                 <!-- Text Content -->
                                 <div class="absolute bottom-0 left-0 right-0 p-6">
@@ -238,5 +255,129 @@
 
     <!-- Points Display -->
     @include('components.points-display')
+
+    <!-- Admin Show Photo Upload Modal -->
+    @auth
+        @if(auth()->user()->is_admin)
+            <div id="showPhotoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+                <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                    <div class="mt-3">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Upload Show Photo</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Upload a photo for "<span id="showName"></span>"
+                        </p>
+                        
+                        <form id="showPhotoForm" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="show_photo" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Choose Photo
+                                </label>
+                                <input type="file" 
+                                       id="show_photo" 
+                                       name="photo" 
+                                       accept="image/*"
+                                       required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            
+                            <!-- Photo Preview -->
+                            <div id="show-photo-preview" class="hidden mb-4">
+                                <img id="show-preview-img" src="" alt="Preview" class="w-full h-32 object-cover rounded-lg">
+                            </div>
+                            
+                            <div class="flex justify-end space-x-3">
+                                <button type="button" 
+                                        onclick="closeShowPhotoModal()"
+                                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded transition-colors">
+                                    Cancel
+                                </button>
+                                <button type="submit" 
+                                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors">
+                                    Upload Photo
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endauth
+
+    <script>
+        let currentShowId = null;
+
+        function openShowPhotoModal(showId, showName) {
+            currentShowId = showId;
+            document.getElementById('showName').textContent = showName;
+            document.getElementById('showPhotoModal').classList.remove('hidden');
+        }
+
+        function closeShowPhotoModal() {
+            document.getElementById('showPhotoModal').classList.add('hidden');
+            document.getElementById('showPhotoForm').reset();
+            document.getElementById('show-photo-preview').classList.add('hidden');
+            currentShowId = null;
+        }
+
+        // Photo preview functionality
+        document.getElementById('show_photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('show-preview-img').src = e.target.result;
+                    document.getElementById('show-photo-preview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form submission
+        document.getElementById('showPhotoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentShowId) return;
+            
+            const formData = new FormData(this);
+            const submitButton = this.querySelector('button[type="submit"]');
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Uploading...';
+            
+            fetch(`/admin/tv-shows/${currentShowId}/upload-photo`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Reload the page to show the new photo
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the photo.');
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Upload Photo';
+                closeShowPhotoModal();
+            });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('showPhotoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeShowPhotoModal();
+            }
+        });
+    </script>
 </body>
 </html>

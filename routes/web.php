@@ -49,6 +49,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/tv-show-submissions', [\App\Http\Controllers\TvShowSubmissionController::class, 'adminIndex'])->name('admin.tv-show-submissions');
     Route::post('/admin/tv-show-submissions/{tvShowSubmission}/approve', [\App\Http\Controllers\TvShowSubmissionController::class, 'approve'])->name('admin.tv-show-submissions.approve');
     Route::post('/admin/tv-show-submissions/{tvShowSubmission}/reject', [\App\Http\Controllers\TvShowSubmissionController::class, 'reject'])->name('admin.tv-show-submissions.reject');
+    
+    // Admin photo management
+    Route::post('/admin/actors/{actor}/upload-photo', [\App\Http\Controllers\AdminController::class, 'uploadActorPhoto'])->name('admin.actors.upload-photo');
+    Route::post('/admin/tv-shows/{tvShow}/upload-photo', [\App\Http\Controllers\AdminController::class, 'uploadShowPhoto'])->name('admin.tv-shows.upload-photo');
 });
 
 require __DIR__.'/auth.php';

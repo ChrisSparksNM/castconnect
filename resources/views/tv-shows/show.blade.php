@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $tvShow->name }} - TV Shows & Actors</title>
     
     <!-- Fonts -->
@@ -30,7 +31,7 @@
 
             <!-- Show Header -->
             <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden mb-8">
-                <div class="relative h-64 overflow-hidden">
+                <div class="relative h-64 overflow-hidden group">
                     @if($tvShow->image_url)
                         <!-- Show Image Background -->
                         <img src="{{ $tvShow->image_url }}" 
@@ -42,6 +43,22 @@
                         <!-- Fallback Gradient -->
                         <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600"></div>
                     @endif
+
+                    <!-- Admin Photo Upload Button -->
+                    @auth
+                        @if(auth()->user()->is_admin)
+                            <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="openShowPhotoModal({{ $tvShow->id }}, '{{ $tvShow->name }}')" 
+                                        class="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors"
+                                        title="Upload show photo">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        @endif
+                    @endauth
                     
                     <!-- Text Content -->
                     <div class="absolute bottom-0 left-0 right-0 p-8">
@@ -86,15 +103,50 @@
                                 <!-- Actor Header with Photo -->
                                 <div class="flex items-center space-x-4 mb-4">
                                     <!-- Actor Photo -->
-                                    @if($actor->photo_url)
-                                        <img src="{{ $actor->photo_url }}" 
-                                             alt="{{ $actor->name }}" 
-                                             class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md">
+                                    @auth
+                                        @if(auth()->user()->is_admin)
+                                            <div class="relative group cursor-pointer" onclick="openActorPhotoModal({{ $actor->id }}, '{{ $actor->name }}')">
+                                                @if($actor->photo_url)
+                                                    <img src="{{ $actor->photo_url }}" 
+                                                         alt="{{ $actor->name }}" 
+                                                         class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md group-hover:opacity-75 transition-opacity">
+                                                @else
+                                                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg group-hover:opacity-75 transition-opacity">
+                                                        {{ substr($actor->name, 0, 1) }}
+                                                    </div>
+                                                @endif
+                                                <!-- Upload Icon Overlay -->
+                                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <div class="bg-black/50 rounded-full p-2">
+                                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @else
+                                            @if($actor->photo_url)
+                                                <img src="{{ $actor->photo_url }}" 
+                                                     alt="{{ $actor->name }}" 
+                                                     class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md">
+                                            @else
+                                                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                                    {{ substr($actor->name, 0, 1) }}
+                                                </div>
+                                            @endif
+                                        @endif
                                     @else
-                                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                                            {{ substr($actor->name, 0, 1) }}
-                                        </div>
-                                    @endif
+                                        @if($actor->photo_url)
+                                            <img src="{{ $actor->photo_url }}" 
+                                                 alt="{{ $actor->name }}" 
+                                                 class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md">
+                                        @else
+                                            <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                                {{ substr($actor->name, 0, 1) }}
+                                            </div>
+                                        @endif
+                                    @endauth
                                     
                                     <!-- Actor Info -->
                                     <div>
@@ -317,5 +369,248 @@
 
     <!-- Points Display -->
     @include('components.points-display')
+
+    <!-- Admin Photo Upload Modals -->
+    @auth
+        @if(auth()->user()->is_admin)
+            <!-- Show Photo Upload Modal -->
+            <div id="showPhotoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+                <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                    <div class="mt-3">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Upload Show Photo</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Upload a photo for "<span id="showName"></span>"
+                        </p>
+                        
+                        <form id="showPhotoForm" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="show_photo" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Choose Photo
+                                </label>
+                                <input type="file" 
+                                       id="show_photo" 
+                                       name="photo" 
+                                       accept="image/*"
+                                       required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            
+                            <!-- Photo Preview -->
+                            <div id="show-photo-preview" class="hidden mb-4">
+                                <img id="show-preview-img" src="" alt="Preview" class="w-full h-32 object-cover rounded-lg">
+                            </div>
+                            
+                            <div class="flex justify-end space-x-3">
+                                <button type="button" 
+                                        onclick="closeShowPhotoModal()"
+                                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded transition-colors">
+                                    Cancel
+                                </button>
+                                <button type="submit" 
+                                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors">
+                                    Upload Photo
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actor Photo Upload Modal -->
+            <div id="actorPhotoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+                <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                    <div class="mt-3">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Upload Actor Photo</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Upload a photo for "<span id="actorName"></span>"
+                        </p>
+                        
+                        <form id="actorPhotoForm" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="actor_photo" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Choose Photo
+                                </label>
+                                <input type="file" 
+                                       id="actor_photo" 
+                                       name="photo" 
+                                       accept="image/*"
+                                       required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            
+                            <!-- Photo Preview -->
+                            <div id="actor-photo-preview" class="hidden mb-4">
+                                <img id="actor-preview-img" src="" alt="Preview" class="w-24 h-24 object-cover rounded-full mx-auto">
+                            </div>
+                            
+                            <div class="flex justify-end space-x-3">
+                                <button type="button" 
+                                        onclick="closeActorPhotoModal()"
+                                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded transition-colors">
+                                    Cancel
+                                </button>
+                                <button type="submit" 
+                                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors">
+                                    Upload Photo
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endauth
+
+    <script>
+        let currentShowId = null;
+        let currentActorId = null;
+
+        // Show Photo Modal Functions
+        function openShowPhotoModal(showId, showName) {
+            currentShowId = showId;
+            document.getElementById('showName').textContent = showName;
+            document.getElementById('showPhotoModal').classList.remove('hidden');
+        }
+
+        function closeShowPhotoModal() {
+            document.getElementById('showPhotoModal').classList.add('hidden');
+            document.getElementById('showPhotoForm').reset();
+            document.getElementById('show-photo-preview').classList.add('hidden');
+            currentShowId = null;
+        }
+
+        // Actor Photo Modal Functions
+        function openActorPhotoModal(actorId, actorName) {
+            currentActorId = actorId;
+            document.getElementById('actorName').textContent = actorName;
+            document.getElementById('actorPhotoModal').classList.remove('hidden');
+        }
+
+        function closeActorPhotoModal() {
+            document.getElementById('actorPhotoModal').classList.add('hidden');
+            document.getElementById('actorPhotoForm').reset();
+            document.getElementById('actor-photo-preview').classList.add('hidden');
+            currentActorId = null;
+        }
+
+        // Show Photo preview functionality
+        document.getElementById('show_photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('show-preview-img').src = e.target.result;
+                    document.getElementById('show-photo-preview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Actor Photo preview functionality
+        document.getElementById('actor_photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('actor-preview-img').src = e.target.result;
+                    document.getElementById('actor-photo-preview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Show Photo Form submission
+        document.getElementById('showPhotoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentShowId) return;
+            
+            const formData = new FormData(this);
+            const submitButton = this.querySelector('button[type="submit"]');
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Uploading...';
+            
+            fetch(`/admin/tv-shows/${currentShowId}/upload-photo`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Reload the page to show the new photo
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the photo.');
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Upload Photo';
+                closeShowPhotoModal();
+            });
+        });
+
+        // Actor Photo Form submission
+        document.getElementById('actorPhotoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentActorId) return;
+            
+            const formData = new FormData(this);
+            const submitButton = this.querySelector('button[type="submit"]');
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Uploading...';
+            
+            fetch(`/admin/actors/${currentActorId}/upload-photo`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Reload the page to show the new photo
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the photo.');
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Upload Photo';
+                closeActorPhotoModal();
+            });
+        });
+
+        // Close modals when clicking outside
+        document.getElementById('showPhotoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeShowPhotoModal();
+            }
+        });
+
+        document.getElementById('actorPhotoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeActorPhotoModal();
+            }
+        });
+    </script>
 </body>
 </html>
