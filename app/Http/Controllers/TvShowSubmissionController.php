@@ -73,7 +73,7 @@ class TvShowSubmissionController extends Controller
         return view('admin.tv-show-submissions', compact('submissions'));
     }
 
-    public function approve(TvShowSubmission $submission)
+    public function approve(TvShowSubmission $tvShowSubmission)
     {
         if (!auth()->user()->is_admin) {
             abort(403);
@@ -81,37 +81,51 @@ class TvShowSubmissionController extends Controller
 
         try {
             // Check if TV show with this name already exists
-            $existingShow = TvShow::where('name', $submission->name)->first();
+            $existingShow = TvShow::where('name', $tvShowSubmission->name)->first();
             if ($existingShow) {
                 return redirect()->back()
-                    ->with('error', "A TV show named '{$submission->name}' already exists in the database!");
+                    ->with('error', "A TV show named '{$tvShowSubmission->name}' already exists in the database!");
             }
 
+            // Prepare data for TV show creation
+            $tvShowData = [
+                'name' => $tvShowSubmission->name,
+                'description' => $tvShowSubmission->description,
+                'year_started' => $tvShowSubmission->year_started,
+                'year_ended' => $tvShowSubmission->year_ended,
+                'genre' => $tvShowSubmission->genre,
+            ];
+
+            // Only add image_url if there's an image_path
+            if ($tvShowSubmission->image_path) {
+                $tvShowData['image_url'] = asset('storage/' . $tvShowSubmission->image_path);
+            }
+
+            \Log::info('Creating TV show with data: ', $tvShowData);
+
             // Create the actual TV show
-            $tvShow = TvShow::create([
-                'name' => $submission->name,
-                'description' => $submission->description,
-                'year_started' => $submission->year_started,
-                'year_ended' => $submission->year_ended,
-                'genre' => $submission->genre,
-                'image_url' => $submission->image_path ? asset('storage/' . $submission->image_path) : null,
-            ]);
+            $tvShow = TvShow::create($tvShowData);
+
+            \Log::info('TV show created successfully: ' . $tvShow->id);
 
             // Update submission status
-            $submission->update([
+            $tvShowSubmission->update([
                 'status' => 'approved',
                 'approved_by' => auth()->id(),
                 'approved_at' => now(),
             ]);
 
+            \Log::info('Submission updated successfully');
+
             return redirect()->back()
-                ->with('success', "TV show '{$submission->name}' has been approved and added to the database!");
+                ->with('success', "TV show '{$tvShowSubmission->name}' has been approved and added to the database!");
 
         } catch (\Exception $e) {
             \Log::error('Error approving TV show submission: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
             
             return redirect()->back()
-                ->with('error', 'An error occurred while approving the submission. Please try again.');
+                ->with('error', 'Error: ' . $e->getMessage());
         }
     }
 
