@@ -11,7 +11,8 @@ class Actor extends Model
         'name',
         'character_name',
         'instagram_handle',
-        'x_handle'
+        'x_handle',
+        'photo_url'
     ];
 
     public function tvShow()

@@ -83,7 +83,20 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($tvShow->actors as $actor)
                             <div class="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
-                                <div class="flex items-start justify-between mb-4">
+                                <!-- Actor Header with Photo -->
+                                <div class="flex items-center space-x-4 mb-4">
+                                    <!-- Actor Photo -->
+                                    @if($actor->photo_url)
+                                        <img src="{{ $actor->photo_url }}" 
+                                             alt="{{ $actor->name }}" 
+                                             class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md">
+                                    @else
+                                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                            {{ substr($actor->name, 0, 1) }}
+                                        </div>
+                                    @endif
+                                    
+                                    <!-- Actor Info -->
                                     <div>
                                         <h3 class="font-semibold text-gray-900 text-lg">{{ $actor->name }}</h3>
                                         @if($actor->character_name)

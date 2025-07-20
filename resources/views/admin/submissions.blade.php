@@ -36,12 +36,26 @@
                             @foreach($submissions as $submission)
                                 <div class="border rounded-lg p-6 @if($submission->status === 'pending') bg-yellow-50 @elseif($submission->status === 'approved') bg-green-50 @else bg-red-50 @endif">
                                     <div class="flex justify-between items-start mb-4">
-                                        <div>
-                                            <h3 class="text-lg font-semibold">{{ $submission->actor_name }}</h3>
-                                            <p class="text-gray-600">{{ $submission->tvShow->name }}</p>
-                                            @if($submission->character_name)
-                                                <p class="text-sm text-gray-500">Character: {{ $submission->character_name }}</p>
+                                        <div class="flex items-center space-x-4">
+                                            <!-- Actor Photo -->
+                                            @if($submission->photo_path)
+                                                <img src="{{ asset('storage/' . $submission->photo_path) }}" 
+                                                     alt="{{ $submission->actor_name }}" 
+                                                     class="w-16 h-16 rounded-full object-cover border-2 border-gray-200 shadow-sm">
+                                            @else
+                                                <div class="w-16 h-16 bg-gradient-to-r from-gray-400 to-gray-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                                    {{ substr($submission->actor_name, 0, 1) }}
+                                                </div>
                                             @endif
+                                            
+                                            <!-- Actor Info -->
+                                            <div>
+                                                <h3 class="text-lg font-semibold">{{ $submission->actor_name }}</h3>
+                                                <p class="text-gray-600">{{ $submission->tvShow->name }}</p>
+                                                @if($submission->character_name)
+                                                    <p class="text-sm text-gray-500">Character: {{ $submission->character_name }}</p>
+                                                @endif
+                                            </div>
                                         </div>
                                         <span class="px-3 py-1 text-sm font-semibold rounded-full 
                                             @if($submission->status === 'pending') bg-yellow-200 text-yellow-800

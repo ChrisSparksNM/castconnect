@@ -82,11 +82,25 @@
                                     <div class="space-y-3 mb-4">
                                         @foreach($show->actors->take(3) as $actor)
                                             <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                                <div>
-                                                    <div class="font-medium text-gray-900">{{ $actor->name }}</div>
-                                                    @if($actor->character_name)
-                                                        <div class="text-sm text-gray-500">as {{ $actor->character_name }}</div>
+                                                <div class="flex items-center space-x-3">
+                                                    <!-- Actor Photo -->
+                                                    @if($actor->photo_url)
+                                                        <img src="{{ $actor->photo_url }}" 
+                                                             alt="{{ $actor->name }}" 
+                                                             class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm">
+                                                    @else
+                                                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                                            {{ substr($actor->name, 0, 1) }}
+                                                        </div>
                                                     @endif
+                                                    
+                                                    <!-- Actor Info -->
+                                                    <div>
+                                                        <div class="font-medium text-gray-900">{{ $actor->name }}</div>
+                                                        @if($actor->character_name)
+                                                            <div class="text-sm text-gray-500">as {{ $actor->character_name }}</div>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                                 <div class="flex space-x-2">
                                                     @if($actor->instagram_handle)

@@ -36,6 +36,7 @@ class AdminController extends Controller
             'character_name' => $submission->character_name,
             'instagram_handle' => $submission->instagram_handle,
             'x_handle' => $submission->x_handle,
+            'photo_url' => $submission->photo_path ? asset('storage/' . $submission->photo_path) : null,
         ]);
 
         // Calculate points for the user

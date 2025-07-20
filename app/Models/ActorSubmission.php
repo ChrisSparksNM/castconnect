@@ -13,6 +13,7 @@ class ActorSubmission extends Model
         'character_name',
         'instagram_handle',
         'x_handle',
+        'photo_path',
         'status',
         'admin_notes',
         'reviewed_at',
@@ -36,5 +37,13 @@ class ActorSubmission extends Model
     public function reviewer()
     {
         return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
+    public function getPhotoUrlAttribute()
+    {
+        if ($this->photo_path) {
+            return asset('storage/' . $this->photo_path);
+        }
+        return null;
     }
 }
