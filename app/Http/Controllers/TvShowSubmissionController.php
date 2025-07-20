@@ -79,25 +79,40 @@ class TvShowSubmissionController extends Controller
             abort(403);
         }
 
-        // Create the actual TV show
-        $tvShow = TvShow::create([
-            'name' => $submission->name,
-            'description' => $submission->description,
-            'year_started' => $submission->year_started,
-            'year_ended' => $submission->year_ended,
-            'genre' => $submission->genre,
-            'image_url' => $submission->image_path ? asset('storage/' . $submission->image_path) : null,
-        ]);
+        try {
+            // Check if TV show with this name already exists
+            $existingShow = TvShow::where('name', $submission->name)->first();
+            if ($existingShow) {
+                return redirect()->back()
+                    ->with('error', "A TV show named '{$submission->name}' already exists in the database!");
+            }
 
-        // Update submission status
-        $submission->update([
-            'status' => 'approved',
-            'approved_by' => auth()->id(),
-            'approved_at' => now(),
-        ]);
+            // Create the actual TV show
+            $tvShow = TvShow::create([
+                'name' => $submission->name,
+                'description' => $submission->description,
+                'year_started' => $submission->year_started,
+                'year_ended' => $submission->year_ended,
+                'genre' => $submission->genre,
+                'image_url' => $submission->image_path ? asset('storage/' . $submission->image_path) : null,
+            ]);
 
-        return redirect()->back()
-            ->with('success', "TV show '{$submission->name}' has been approved and added to the database!");
+            // Update submission status
+            $submission->update([
+                'status' => 'approved',
+                'approved_by' => auth()->id(),
+                'approved_at' => now(),
+            ]);
+
+            return redirect()->back()
+                ->with('success', "TV show '{$submission->name}' has been approved and added to the database!");
+
+        } catch (\Exception $e) {
+            \Log::error('Error approving TV show submission: ' . $e->getMessage());
+            
+            return redirect()->back()
+                ->with('error', 'An error occurred while approving the submission. Please try again.');
+        }
     }
 
     public function reject(Request $request, TvShowSubmission $submission)
