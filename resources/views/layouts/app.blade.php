@@ -16,7 +16,7 @@
     </head>
     <body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen font-['Inter']">
         <div class="min-h-screen">
-            @include('layouts.navigation')
+            @include('components.global-navigation')
 
             <!-- Page Content -->
             <main>

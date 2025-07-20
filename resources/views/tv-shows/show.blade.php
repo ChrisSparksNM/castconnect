@@ -30,18 +30,33 @@
 
             <!-- Show Header -->
             <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden mb-8">
-                <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-8">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                        <div>
-                            <h1 class="text-3xl font-bold text-white mb-2">{{ $tvShow->name }}</h1>
-                            <div class="flex flex-wrap items-center text-blue-100 text-sm space-x-4">
-                                @if($tvShow->genre)
-                                    <span class="bg-white/20 px-3 py-1 rounded-full">{{ $tvShow->genre }}</span>
-                                @endif
-                                @if($tvShow->year_started)
-                                    <span>{{ $tvShow->year_started }}{{ $tvShow->year_ended ? ' - ' . $tvShow->year_ended : ' - Present' }}</span>
-                                @endif
-                                <span>{{ $tvShow->actors->count() }} {{ Str::plural('Actor', $tvShow->actors->count()) }}</span>
+                <div class="relative h-64 overflow-hidden">
+                    @if($tvShow->image_url)
+                        <!-- Show Image Background -->
+                        <img src="{{ $tvShow->image_url }}" 
+                             alt="{{ $tvShow->name }}" 
+                             class="w-full h-full object-cover">
+                        <!-- Dark Overlay for Text Readability -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                    @else
+                        <!-- Fallback Gradient -->
+                        <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600"></div>
+                    @endif
+                    
+                    <!-- Text Content -->
+                    <div class="absolute bottom-0 left-0 right-0 p-8">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div>
+                                <h1 class="text-3xl font-bold text-white mb-2">{{ $tvShow->name }}</h1>
+                                <div class="flex flex-wrap items-center text-white/90 text-sm space-x-4">
+                                    @if($tvShow->genre)
+                                        <span class="bg-white/20 px-3 py-1 rounded-full">{{ $tvShow->genre }}</span>
+                                    @endif
+                                    @if($tvShow->year_started)
+                                        <span>{{ $tvShow->year_started }}{{ $tvShow->year_ended ? ' - ' . $tvShow->year_ended : ' - Present' }}</span>
+                                    @endif
+                                    <span>{{ $tvShow->actors->count() }} {{ Str::plural('Actor', $tvShow->actors->count()) }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>

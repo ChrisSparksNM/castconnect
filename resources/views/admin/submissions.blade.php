@@ -7,6 +7,22 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Admin Navigation -->
+            <div class="mb-6">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                    <div class="flex space-x-4">
+                        <a href="{{ route('admin.submissions') }}" 
+                           class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                            Actor Submissions
+                        </a>
+                        <a href="{{ route('admin.tv-show-submissions') }}" 
+                           class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors">
+                            TV Show Submissions
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     @if(session('success'))

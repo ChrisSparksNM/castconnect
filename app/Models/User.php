@@ -58,10 +58,18 @@ class User extends Authenticatable
     }
 
     /**
-     * Get user's submissions
+     * Get user's actor submissions
      */
     public function submissions()
     {
         return $this->hasMany(ActorSubmission::class);
+    }
+
+    /**
+     * Get user's TV show submissions
+     */
+    public function tvShowSubmissions()
+    {
+        return $this->hasMany(TvShowSubmission::class);
     }
 }

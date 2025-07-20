@@ -34,10 +34,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/submit-actor', [ActorSubmissionController::class, 'store'])->name('actor-submissions.store');
     Route::get('/my-submissions', [ActorSubmissionController::class, 'index'])->name('actor-submissions.index');
     
+    // TV Show submissions
+    Route::get('/submit-show', [\App\Http\Controllers\TvShowSubmissionController::class, 'create'])->name('tv-show-submissions.create');
+    Route::post('/submit-show', [\App\Http\Controllers\TvShowSubmissionController::class, 'store'])->name('tv-show-submissions.store');
+    Route::get('/my-show-submissions', [\App\Http\Controllers\TvShowSubmissionController::class, 'index'])->name('tv-show-submissions.index');
+    Route::get('/my-show-submissions/{tvShowSubmission}', [\App\Http\Controllers\TvShowSubmissionController::class, 'show'])->name('tv-show-submissions.show');
+    
     // Admin routes
     Route::get('/admin/submissions', [AdminController::class, 'submissions'])->name('admin.submissions');
     Route::post('/admin/submissions/{submission}/approve', [AdminController::class, 'approveSubmission'])->name('admin.submissions.approve');
     Route::post('/admin/submissions/{submission}/reject', [AdminController::class, 'rejectSubmission'])->name('admin.submissions.reject');
+    
+    // Admin TV Show submissions
+    Route::get('/admin/tv-show-submissions', [\App\Http\Controllers\TvShowSubmissionController::class, 'adminIndex'])->name('admin.tv-show-submissions');
+    Route::post('/admin/tv-show-submissions/{tvShowSubmission}/approve', [\App\Http\Controllers\TvShowSubmissionController::class, 'approve'])->name('admin.tv-show-submissions.approve');
+    Route::post('/admin/tv-show-submissions/{tvShowSubmission}/reject', [\App\Http\Controllers\TvShowSubmissionController::class, 'reject'])->name('admin.tv-show-submissions.reject');
 });
 
 require __DIR__.'/auth.php';

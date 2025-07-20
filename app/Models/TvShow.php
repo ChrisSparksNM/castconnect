@@ -11,7 +11,8 @@ class TvShow extends Model
         'description',
         'year_started',
         'year_ended',
-        'genre'
+        'genre',
+        'image_url'
     ];
 
     public function actors()

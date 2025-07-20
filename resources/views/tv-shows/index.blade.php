@@ -36,13 +36,28 @@
                     @foreach($tvShows as $show)
                         <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300">
                             <!-- Show Header -->
-                            <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-6">
-                                <h2 class="text-xl font-bold text-white mb-2">{{ $show->name }}</h2>
-                                <div class="flex items-center text-blue-100 text-sm">
-                                    <span class="mr-4">{{ $show->genre ?? 'TV Series' }}</span>
-                                    @if($show->year_started)
-                                        <span>{{ $show->year_started }}{{ $show->year_ended ? ' - ' . $show->year_ended : ' - Present' }}</span>
-                                    @endif
+                            <div class="relative h-48 overflow-hidden">
+                                @if($show->image_url)
+                                    <!-- Show Image Background -->
+                                    <img src="{{ $show->image_url }}" 
+                                         alt="{{ $show->name }}" 
+                                         class="w-full h-full object-cover">
+                                    <!-- Dark Overlay for Text Readability -->
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                                @else
+                                    <!-- Fallback Gradient -->
+                                    <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600"></div>
+                                @endif
+                                
+                                <!-- Text Content -->
+                                <div class="absolute bottom-0 left-0 right-0 p-6">
+                                    <h2 class="text-xl font-bold text-white mb-2">{{ $show->name }}</h2>
+                                    <div class="flex items-center text-white/90 text-sm">
+                                        <span class="mr-4">{{ $show->genre ?? 'TV Series' }}</span>
+                                        @if($show->year_started)
+                                            <span>{{ $show->year_started }}{{ $show->year_ended ? ' - ' . $show->year_ended : ' - Present' }}</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
 
