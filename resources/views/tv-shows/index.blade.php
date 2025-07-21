@@ -121,14 +121,17 @@
                                                 </div>
                                                 <div class="flex space-x-2">
                                                     @if($actor->instagram_handle)
-                                                        <a href="https://instagram.com/{{ ltrim($actor->instagram_handle, '@') }}" 
-                                                           target="_blank" 
-                                                           class="text-pink-600 hover:text-pink-800 transition-colors"
-                                                           title="Instagram">
-                                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                                                            </svg>
-                                                        </a>
+                                                        <div class="relative instagram-hover-container">
+                                                            <a href="https://instagram.com/{{ ltrim($actor->instagram_handle, '@') }}" 
+                                                               target="_blank" 
+                                                               class="text-pink-600 hover:text-pink-800 transition-colors instagram-link"
+                                                               data-instagram-handle="{{ ltrim($actor->instagram_handle, '@') }}"
+                                                               title="Instagram">
+                                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.40s-.644-1.44-1.439-1.44z"/>
+                                                                </svg>
+                                                            </a>
+                                                        </div>
                                                     @endif
                                                     @if($actor->x_handle)
                                                         <a href="https://x.com/{{ ltrim($actor->x_handle, '@') }}" 
@@ -304,6 +307,43 @@
         @endif
     @endauth
 
+    <!-- Instagram Profile Embed Popup -->
+    <div id="instagramEmbed" class="fixed z-50 hidden pointer-events-auto">
+        <div class="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden" style="width: 400px; max-height: 500px;">
+            <!-- Loading State -->
+            <div id="embedLoading" class="flex items-center justify-center p-8">
+                <div class="flex flex-col items-center space-y-3">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
+                    <p class="text-sm text-gray-600">Loading Instagram profile...</p>
+                </div>
+            </div>
+            
+            <!-- Error State -->
+            <div id="embedError" class="hidden p-6 text-center">
+                <div class="flex flex-col items-center space-y-3">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">Unable to load Instagram embed</p>
+                        <p class="text-xs text-gray-600 mt-1">Click below to view profile directly</p>
+                    </div>
+                    <a id="errorInstagramLink" href="#" target="_blank" class="inline-flex items-center px-4 py-2 bg-pink-600 text-white text-sm font-medium rounded-lg hover:bg-pink-700 transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        View on Instagram
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Embed Container -->
+            <div id="embedContainer" class="hidden"></div>
+        </div>
+    </div>
+
     <script>
         let currentShowId = null;
 
@@ -321,63 +361,888 @@
         }
 
         // Photo preview functionality
-        document.getElementById('show_photo').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('show-preview-img').src = e.target.result;
-                    document.getElementById('show-photo-preview').classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+        const showPhotoInput = document.getElementById('show_photo');
+        if (showPhotoInput) {
+            showPhotoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('show-preview-img').src = e.target.result;
+                        document.getElementById('show-photo-preview').classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
 
         // Form submission
-        document.getElementById('showPhotoForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (!currentShowId) return;
-            
-            const formData = new FormData(this);
-            const submitButton = this.querySelector('button[type="submit"]');
-            
-            submitButton.disabled = true;
-            submitButton.textContent = 'Uploading...';
-            
-            fetch(`/admin/tv-shows/${currentShowId}/upload-photo`, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        const showPhotoForm = document.getElementById('showPhotoForm');
+        if (showPhotoForm) {
+            showPhotoForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!currentShowId) return;
+                
+                const formData = new FormData(this);
+                const submitButton = this.querySelector('button[type="submit"]');
+                
+                submitButton.disabled = true;
+                submitButton.textContent = 'Uploading...';
+                
+                fetch(`/admin/tv-shows/${currentShowId}/upload-photo`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while uploading the photo.');
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Upload Photo';
+                    closeShowPhotoModal();
+                });
+            });
+        }
+
+        // Close modal when clicking outside
+        const showPhotoModal = document.getElementById('showPhotoModal');
+        if (showPhotoModal) {
+            showPhotoModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeShowPhotoModal();
                 }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Reload the page to show the new photo
-                    location.reload();
-                } else {
-                    alert('Error: ' + data.message);
+            });
+        }
+
+        // Instagram Profile Embed Functionality
+        let hoverTimeout;
+        let embedTimeout;
+        const instagramEmbed = document.getElementById('instagramEmbed');
+        const embedLoading = document.getElementById('embedLoading');
+        const embedError = document.getElementById('embedError');
+        const embedContainer = document.getElementById('embedContainer');
+        const errorInstagramLink = document.getElementById('errorInstagramLink');
+        let instagramScriptLoaded = false;
+
+        // Add hover listeners to all Instagram links
+        document.addEventListener('DOMContentLoaded', function() {
+            const instagramLinks = document.querySelectorAll('.instagram-link');
+            
+            instagramLinks.forEach(link => {
+                link.addEventListener('mouseenter', function(e) {
+                    const handle = this.getAttribute('data-instagram-handle');
+                    showInstagramEmbed(e, handle);
+                });
+
+                link.addEventListener('mouseleave', function() {
+                    hideInstagramEmbed();
+                });
+            });
+
+            // Hide embed when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!instagramEmbed.contains(e.target) && !e.target.closest('.instagram-link')) {
+                    hideInstagramEmbed();
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while uploading the photo.');
-            })
-            .finally(() => {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Upload Photo';
-                closeShowPhotoModal();
             });
         });
 
-        // Close modal when clicking outside
-        document.getElementById('showPhotoModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeShowPhotoModal();
+        function loadInstagramScript() {
+            return new Promise((resolve, reject) => {
+                if (instagramScriptLoaded) {
+                    resolve();
+                    return;
+                }
+
+                const existingScript = document.querySelector('script[src*="instagram.com/embed.js"]');
+                if (existingScript) {
+                    existingScript.remove();
+                }
+
+                const script = document.createElement('script');
+                script.src = 'https://www.instagram.com/embed.js';
+                script.async = true;
+                script.onload = () => {
+                    instagramScriptLoaded = true;
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        function showInstagramEmbed(event, handle) {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            const rect = event.target.closest('.instagram-hover-container').getBoundingClientRect();
+            
+            let left = rect.right + 10;
+            let top = rect.top;
+            
+            const embedWidth = 400;
+            if (left + embedWidth > window.innerWidth) {
+                left = rect.left - embedWidth - 10;
             }
-        });
+            
+            if (top + 500 > window.innerHeight) {
+                top = window.innerHeight - 520;
+            }
+            if (top < 10) {
+                top = 10;
+            }
+            
+            instagramEmbed.style.left = left + 'px';
+            instagramEmbed.style.top = top + 'px';
+            
+            hoverTimeout = setTimeout(() => {
+                embedLoading.classList.remove('hidden');
+                embedError.classList.add('hidden');
+                embedContainer.classList.add('hidden');
+                embedContainer.innerHTML = '';
+                
+                instagramEmbed.classList.remove('hidden');
+                errorInstagramLink.href = `https://instagram.com/${handle}`;
+                
+                embedTimeout = setTimeout(() => {
+                    createInstagramEmbed(handle);
+                }, 300);
+                
+            }, 500);
+        }
+
+        function createInstagramEmbed(handle) {
+            const embedHtml = `
+                <blockquote class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/${handle}/" 
+                    data-instgrm-version="14"
+                    style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:400px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                    <div style="padding:16px;">
+                        <div style="display: flex; flex-direction: row; align-items: center;">
+                            <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                            <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                            </div>
+                        </div>
+                        <div style="padding: 19% 0;"></div>
+                        <div style="display:block; height:50px; margin:0 auto 12px; width:50px;">
+                            <svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-511.000000, -20.000000)" fill="#000000">
+                                        <g>
+                                            <path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div style="padding-top: 8px;">
+                            <div style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">View this profile on Instagram</div>
+                        </div>
+                    </div>
+                </blockquote>
+            `;
+            
+            embedContainer.innerHTML = embedHtml;
+            
+            loadInstagramScript()
+                .then(() => {
+                    embedLoading.classList.add('hidden');
+                    embedContainer.classList.remove('hidden');
+                    
+                    if (window.instgrm && window.instgrm.Embeds) {
+                        window.instgrm.Embeds.process();
+                    }
+                })
+                .catch(() => {
+                    embedLoading.classList.add('hidden');
+                    embedError.classList.remove('hidden');
+                });
+        }
+
+        function hideInstagramEmbed() {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            hoverTimeout = setTimeout(() => {
+                instagramEmbed.classList.add('hidden');
+                embedContainer.innerHTML = '';
+            }, 100);
+        }
+    </script>
+</body>
+</html>
+                    instagramScriptLoaded = true;
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        function showInstagramEmbed(event, handle) {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            const rect = event.target.closest('.instagram-hover-container').getBoundingClientRect();
+            
+            let left = rect.right + 10;
+            let top = rect.top;
+            
+            const embedWidth = 400;
+            if (left + embedWidth > window.innerWidth) {
+                left = rect.left - embedWidth - 10;
+            }
+            
+            if (top + 500 > window.innerHeight) {
+                top = window.innerHeight - 520;
+            }
+            if (top < 10) {
+                top = 10;
+            }
+            
+            instagramEmbed.style.left = left + 'px';
+            instagramEmbed.style.top = top + 'px';
+            
+            hoverTimeout = setTimeout(() => {
+                embedLoading.classList.remove('hidden');
+                embedError.classList.add('hidden');
+                embedContainer.classList.add('hidden');
+                embedContainer.innerHTML = '';
+                
+                instagramEmbed.classList.remove('hidden');
+                errorInstagramLink.href = `https://instagram.com/${handle}`;
+                
+                embedTimeout = setTimeout(() => {
+                    createInstagramEmbed(handle);
+                }, 300);
+                
+            }, 500);
+        }
+
+        function createInstagramEmbed(handle) {
+            const embedHtml = `
+                <blockquote class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/${handle}/" 
+                    data-instgrm-version="14"
+                    style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:400px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                    <div style="padding:16px;">
+                        <div style="display: flex; flex-direction: row; align-items: center;">
+                            <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                            <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                            </div>
+                        </div>
+                        <div style="padding: 19% 0;"></div>
+                        <div style="display:block; height:50px; margin:0 auto 12px; width:50px;">
+                            <svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-511.000000, -20.000000)" fill="#000000">
+                                        <g>
+                                            <path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div style="padding-top: 8px;">
+                            <div style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">View this profile on Instagram</div>
+                        </div>
+                    </div>
+                </blockquote>
+            `;
+            
+            embedContainer.innerHTML = embedHtml;
+            
+            loadInstagramScript()
+                .then(() => {
+                    embedLoading.classList.add('hidden');
+                    embedContainer.classList.remove('hidden');
+                    
+                    if (window.instgrm && window.instgrm.Embeds) {
+                        window.instgrm.Embeds.process();
+                    }
+                })
+                .catch(() => {
+                    embedLoading.classList.add('hidden');
+                    embedError.classList.remove('hidden');
+                });
+        }
+
+        function hideInstagramEmbed() {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            hoverTimeout = setTimeout(() => {
+                instagramEmbed.classList.add('hidden');
+                embedContainer.innerHTML = '';
+            }, 100);
+        }
+    </script>
+</body>
+</html>
+                    instagramScriptLoaded = true;
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        function showInstagramEmbed(event, handle) {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            const rect = event.target.closest('.instagram-hover-container').getBoundingClientRect();
+            
+            let left = rect.right + 10;
+            let top = rect.top;
+            
+            const embedWidth = 400;
+            if (left + embedWidth > window.innerWidth) {
+                left = rect.left - embedWidth - 10;
+            }
+            
+            if (top + 500 > window.innerHeight) {
+                top = window.innerHeight - 520;
+            }
+            if (top < 10) {
+                top = 10;
+            }
+            
+            instagramEmbed.style.left = left + 'px';
+            instagramEmbed.style.top = top + 'px';
+            
+            hoverTimeout = setTimeout(() => {
+                embedLoading.classList.remove('hidden');
+                embedError.classList.add('hidden');
+                embedContainer.classList.add('hidden');
+                embedContainer.innerHTML = '';
+                
+                instagramEmbed.classList.remove('hidden');
+                errorInstagramLink.href = `https://instagram.com/${handle}`;
+                
+                embedTimeout = setTimeout(() => {
+                    createInstagramEmbed(handle);
+                }, 300);
+                
+            }, 500);
+        }
+
+        function createInstagramEmbed(handle) {
+            const embedHtml = `
+                <blockquote class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/${handle}/" 
+                    data-instgrm-version="14"
+                    style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:400px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                    <div style="padding:16px;">
+                        <div style="display: flex; flex-direction: row; align-items: center;">
+                            <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                            <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                            </div>
+                        </div>
+                        <div style="padding: 19% 0;"></div>
+                        <div style="display:block; height:50px; margin:0 auto 12px; width:50px;">
+                            <svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-511.000000, -20.000000)" fill="#000000">
+                                        <g>
+                                            <path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div style="padding-top: 8px;">
+                            <div style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">View this profile on Instagram</div>
+                        </div>
+                    </div>
+                </blockquote>
+            `;
+            
+            embedContainer.innerHTML = embedHtml;
+            
+            loadInstagramScript()
+                .then(() => {
+                    embedLoading.classList.add('hidden');
+                    embedContainer.classList.remove('hidden');
+                    
+                    if (window.instgrm && window.instgrm.Embeds) {
+                        window.instgrm.Embeds.process();
+                    }
+                })
+                .catch(() => {
+                    embedLoading.classList.add('hidden');
+                    embedError.classList.remove('hidden');
+                });
+        }
+
+        function hideInstagramEmbed() {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            hoverTimeout = setTimeout(() => {
+                instagramEmbed.classList.add('hidden');
+                embedContainer.innerHTML = '';
+            }, 100);
+        }
+    </script>
+</body>
+</html>
+                    instagramScriptLoaded = true;
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        function showInstagramEmbed(event, handle) {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            const rect = event.target.closest('.instagram-hover-container').getBoundingClientRect();
+            
+            let left = rect.right + 10;
+            let top = rect.top;
+            
+            const embedWidth = 400;
+            if (left + embedWidth > window.innerWidth) {
+                left = rect.left - embedWidth - 10;
+            }
+            
+            if (top + 500 > window.innerHeight) {
+                top = window.innerHeight - 520;
+            }
+            if (top < 10) {
+                top = 10;
+            }
+            
+            instagramEmbed.style.left = left + 'px';
+            instagramEmbed.style.top = top + 'px';
+            
+            hoverTimeout = setTimeout(() => {
+                embedLoading.classList.remove('hidden');
+                embedError.classList.add('hidden');
+                embedContainer.classList.add('hidden');
+                embedContainer.innerHTML = '';
+                
+                instagramEmbed.classList.remove('hidden');
+                errorInstagramLink.href = `https://instagram.com/${handle}`;
+                
+                embedTimeout = setTimeout(() => {
+                    createInstagramEmbed(handle);
+                }, 300);
+                
+            }, 500);
+        }
+
+        function createInstagramEmbed(handle) {
+            const embedHtml = `
+                <blockquote class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/${handle}/" 
+                    data-instgrm-version="14"
+                    style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:400px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                    <div style="padding:16px;">
+                        <div style="display: flex; flex-direction: row; align-items: center;">
+                            <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                            <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                            </div>
+                        </div>
+                        <div style="padding: 19% 0;"></div>
+                        <div style="display:block; height:50px; margin:0 auto 12px; width:50px;">
+                            <svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-511.000000, -20.000000)" fill="#000000">
+                                        <g>
+                                            <path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div style="padding-top: 8px;">
+                            <div style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">View this profile on Instagram</div>
+                        </div>
+                    </div>
+                </blockquote>
+            `;
+            
+            embedContainer.innerHTML = embedHtml;
+            
+            loadInstagramScript()
+                .then(() => {
+                    embedLoading.classList.add('hidden');
+                    embedContainer.classList.remove('hidden');
+                    
+                    if (window.instgrm && window.instgrm.Embeds) {
+                        window.instgrm.Embeds.process();
+                    }
+                })
+                .catch(() => {
+                    embedLoading.classList.add('hidden');
+                    embedError.classList.remove('hidden');
+                });
+        }
+
+        function hideInstagramEmbed() {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            hoverTimeout = setTimeout(() => {
+                instagramEmbed.classList.add('hidden');
+                embedContainer.innerHTML = '';
+            }, 100);
+        }
+    </script>
+</body>
+</html>
+                    instagramScriptLoaded = true;
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        function showInstagramEmbed(event, handle) {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            const rect = event.target.closest('.instagram-hover-container').getBoundingClientRect();
+            
+            let left = rect.right + 10;
+            let top = rect.top;
+            
+            const embedWidth = 400;
+            if (left + embedWidth > window.innerWidth) {
+                left = rect.left - embedWidth - 10;
+            }
+            
+            if (top + 500 > window.innerHeight) {
+                top = window.innerHeight - 520;
+            }
+            if (top < 10) {
+                top = 10;
+            }
+            
+            instagramEmbed.style.left = left + 'px';
+            instagramEmbed.style.top = top + 'px';
+            
+            hoverTimeout = setTimeout(() => {
+                embedLoading.classList.remove('hidden');
+                embedError.classList.add('hidden');
+                embedContainer.classList.add('hidden');
+                embedContainer.innerHTML = '';
+                
+                instagramEmbed.classList.remove('hidden');
+                errorInstagramLink.href = `https://instagram.com/${handle}`;
+                
+                embedTimeout = setTimeout(() => {
+                    createInstagramEmbed(handle);
+                }, 300);
+                
+            }, 500);
+        }
+
+        function createInstagramEmbed(handle) {
+            const embedHtml = `
+                <blockquote class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/${handle}/" 
+                    data-instgrm-version="14"
+                    style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:400px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                    <div style="padding:16px;">
+                        <div style="display: flex; flex-direction: row; align-items: center;">
+                            <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                            <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                            </div>
+                        </div>
+                        <div style="padding: 19% 0;"></div>
+                        <div style="display:block; height:50px; margin:0 auto 12px; width:50px;">
+                            <svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-511.000000, -20.000000)" fill="#000000">
+                                        <g>
+                                            <path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div style="padding-top: 8px;">
+                            <div style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">View this profile on Instagram</div>
+                        </div>
+                    </div>
+                </blockquote>
+            `;
+            
+            embedContainer.innerHTML = embedHtml;
+            
+            loadInstagramScript()
+                .then(() => {
+                    embedLoading.classList.add('hidden');
+                    embedContainer.classList.remove('hidden');
+                    
+                    if (window.instgrm && window.instgrm.Embeds) {
+                        window.instgrm.Embeds.process();
+                    }
+                })
+                .catch(() => {
+                    embedLoading.classList.add('hidden');
+                    embedError.classList.remove('hidden');
+                });
+        }
+
+        function hideInstagramEmbed() {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            hoverTimeout = setTimeout(() => {
+                instagramEmbed.classList.add('hidden');
+                embedContainer.innerHTML = '';
+            }, 100);
+        }
+    </script>
+</body>
+</html>
+                    instagramScriptLoaded = true;
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        function showInstagramEmbed(event, handle) {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            const rect = event.target.closest('.instagram-hover-container').getBoundingClientRect();
+            
+            let left = rect.right + 10;
+            let top = rect.top;
+            
+            const embedWidth = 400;
+            if (left + embedWidth > window.innerWidth) {
+                left = rect.left - embedWidth - 10;
+            }
+            
+            if (top + 500 > window.innerHeight) {
+                top = window.innerHeight - 520;
+            }
+            if (top < 10) {
+                top = 10;
+            }
+            
+            instagramEmbed.style.left = left + 'px';
+            instagramEmbed.style.top = top + 'px';
+            
+            hoverTimeout = setTimeout(() => {
+                embedLoading.classList.remove('hidden');
+                embedError.classList.add('hidden');
+                embedContainer.classList.add('hidden');
+                embedContainer.innerHTML = '';
+                
+                instagramEmbed.classList.remove('hidden');
+                errorInstagramLink.href = `https://instagram.com/${handle}`;
+                
+                embedTimeout = setTimeout(() => {
+                    createInstagramEmbed(handle);
+                }, 300);
+                
+            }, 500);
+        }
+
+        function createInstagramEmbed(handle) {
+            const embedHtml = `
+                <blockquote class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/${handle}/" 
+                    data-instgrm-version="14"
+                    style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:400px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                    <div style="padding:16px;">
+                        <div style="display: flex; flex-direction: row; align-items: center;">
+                            <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                            <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                            </div>
+                        </div>
+                        <div style="padding: 19% 0;"></div>
+                        <div style="display:block; height:50px; margin:0 auto 12px; width:50px;">
+                            <svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-511.000000, -20.000000)" fill="#000000">
+                                        <g>
+                                            <path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div style="padding-top: 8px;">
+                            <div style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">View this profile on Instagram</div>
+                        </div>
+                    </div>
+                </blockquote>
+            `;
+            
+            embedContainer.innerHTML = embedHtml;
+            
+            loadInstagramScript()
+                .then(() => {
+                    embedLoading.classList.add('hidden');
+                    embedContainer.classList.remove('hidden');
+                    
+                    if (window.instgrm && window.instgrm.Embeds) {
+                        window.instgrm.Embeds.process();
+                    }
+                })
+                .catch(() => {
+                    embedLoading.classList.add('hidden');
+                    embedError.classList.remove('hidden');
+                });
+        }
+
+        function hideInstagramEmbed() {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            hoverTimeout = setTimeout(() => {
+                instagramEmbed.classList.add('hidden');
+                embedContainer.innerHTML = '';
+            }, 100);
+        }
+    </script>
+</body>
+</html>  
+                  instagramScriptLoaded = true;
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        function showInstagramEmbed(event, handle) {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            const rect = event.target.closest('.instagram-hover-container').getBoundingClientRect();
+            
+            let left = rect.right + 10;
+            let top = rect.top;
+            
+            const embedWidth = 400;
+            if (left + embedWidth > window.innerWidth) {
+                left = rect.left - embedWidth - 10;
+            }
+            
+            if (top + 500 > window.innerHeight) {
+                top = window.innerHeight - 520;
+            }
+            if (top < 10) {
+                top = 10;
+            }
+            
+            instagramEmbed.style.left = left + 'px';
+            instagramEmbed.style.top = top + 'px';
+            
+            hoverTimeout = setTimeout(() => {
+                embedLoading.classList.remove('hidden');
+                embedError.classList.add('hidden');
+                embedContainer.classList.add('hidden');
+                embedContainer.innerHTML = '';
+                
+                instagramEmbed.classList.remove('hidden');
+                errorInstagramLink.href = `https://instagram.com/${handle}`;
+                
+                embedTimeout = setTimeout(() => {
+                    createInstagramEmbed(handle);
+                }, 300);
+                
+            }, 500);
+        }
+
+        function createInstagramEmbed(handle) {
+            const embedHtml = `
+                <blockquote class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/${handle}/" 
+                    data-instgrm-version="14"
+                    style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:400px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                    <div style="padding:16px;">
+                        <div style="display: flex; flex-direction: row; align-items: center;">
+                            <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                            <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                                <div style="background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                            </div>
+                        </div>
+                        <div style="padding: 19% 0;"></div>
+                        <div style="display:block; height:50px; margin:0 auto 12px; width:50px;">
+                            <svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-511.000000, -20.000000)" fill="#000000">
+                                        <g>
+                                            <path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div style="padding-top: 8px;">
+                            <div style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">View this profile on Instagram</div>
+                        </div>
+                    </div>
+                </blockquote>
+            `;
+            
+            embedContainer.innerHTML = embedHtml;
+            
+            loadInstagramScript()
+                .then(() => {
+                    embedLoading.classList.add('hidden');
+                    embedContainer.classList.remove('hidden');
+                    
+                    if (window.instgrm && window.instgrm.Embeds) {
+                        window.instgrm.Embeds.process();
+                    }
+                })
+                .catch(() => {
+                    embedLoading.classList.add('hidden');
+                    embedError.classList.remove('hidden');
+                });
+        }
+
+        function hideInstagramEmbed() {
+            clearTimeout(hoverTimeout);
+            clearTimeout(embedTimeout);
+            
+            hoverTimeout = setTimeout(() => {
+                instagramEmbed.classList.add('hidden');
+                embedContainer.innerHTML = '';
+            }, 100);
+        }
     </script>
 </body>
 </html>

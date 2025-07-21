@@ -841,6 +841,20 @@
                 embedContainer.innerHTML = '';
             }, 100);
         }
+                stats.forEach(stat => {
+                    stat.textContent = 'Loading...';
+                });
+            }, 100); // Small delay to prevent flickering
+        }
+
+        // Handle preview hover to keep it visible
+        instagramPreview.addEventListener('mouseenter', function() {
+            clearTimeout(hoverTimeout);
+        });
+
+        instagramPreview.addEventListener('mouseleave', function() {
+            hideInstagramPreview();
+        });
     </script>
 </body>
 </html>
